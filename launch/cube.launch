@@ -1,5 +1,5 @@
 <launch>
-        <arg name="real_time" default="false"/>
+        <arg name="real_time" default="true"/>
         <arg name="mapping" default="true"/>
         <arg name="residual" default="false"/>
         <arg name="residual_file_name" default=""/>
@@ -10,7 +10,7 @@
         <arg name="record_inertia" default="false"/>
         <arg name="inertia_file_name" default="inertia.csv"/>
 
-        <arg name="use_icra_model" default="false"/>
+        <arg name="use_icra_model" default="true"/>
 
         <arg name="initial_map_file_name" default="" if="$(arg mapping)"/>
         <arg name="initial_map_file_name" default="/hdd/publi_deskewing_uncertainty/2020-11-18_metrology/metrology_lab.vtk" unless="$(arg mapping)"/>

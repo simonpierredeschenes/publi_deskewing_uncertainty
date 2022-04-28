@@ -7,22 +7,8 @@
       zMax: 0.23
       removeInside: 1
 
-- SurfaceNormalDataPointsFilter:
-      knn: 15
-      epsilon: 1
-      keepNormals: 1
-      keepDensities: 1
-      keepEigenValues: 1
-      keepEigenVectors: 1
-      sortEigen: 1
-
-- SurfaceCurvatureDataPointsFilter:
-
-- SimpleSensorNoiseDataPointsFilter:
-    sensorType: 6
-
-#- VoxelGridDataPointsFilter:
-#    vSizeX: 0.05
-#    vSizeY: 0.05
-#    vSizeZ: 0.05
+- VoxelGridDataPointsFilter:
+    vSizeX: 0.05
+    vSizeY: 0.05
+    vSizeZ: 0.05
 
