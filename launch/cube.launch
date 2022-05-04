@@ -11,6 +11,7 @@
         <arg name="inertia_file_name" default="inertia.csv"/>
 
         <arg name="use_icra_model" default="false"/>
+        <arg name="scale_factor" default="1.0"/>
 
         <arg name="initial_map_file_name" default="" if="$(arg mapping)"/>
         <arg name="initial_map_file_name" default="/hdd/publi_deskewing_uncertainty/2020-11-18_metrology/metrology_lab.vtk" unless="$(arg mapping)"/>
@@ -90,6 +91,7 @@
                 <param name="initial_map_pose" value="$(arg initial_map_pose)"/>
                 <param name="record_inertia" value="$(arg record_inertia)"/>
                 <param name="inertia_file_name" value="$(arg inertia_file_name)"/>
+                <param name="scale_factor" value="$(arg scale_factor)"/>
         </node>
 
         <node pkg="rviz" type="rviz" name="rviz" args="-d $(find publi_deskewing_uncertainty)/cfg/cube.rviz"/>
