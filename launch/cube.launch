@@ -1,5 +1,5 @@
 <launch>
-        <arg name="real_time" default="true"/>
+        <arg name="real_time" default="false"/>
         <arg name="mapping" default="true"/>
         <arg name="residual" default="false"/>
         <arg name="residual_file_name" default=""/>
@@ -10,7 +10,7 @@
         <arg name="record_inertia" default="false"/>
         <arg name="inertia_file_name" default="inertia.csv"/>
 
-        <arg name="use_icra_model" default="true"/>
+        <arg name="use_icra_model" default="false"/>
 
         <arg name="initial_map_file_name" default="" if="$(arg mapping)"/>
         <arg name="initial_map_file_name" default="/hdd/publi_deskewing_uncertainty/2020-11-18_metrology/metrology_lab.vtk" unless="$(arg mapping)"/>
@@ -65,7 +65,7 @@
                 <param name="map_update_condition" value="delay"/>
                 <param name="map_update_delay" value="0"/>
                 <param name="sensor_max_range" value="100.0"/>
-                <param name="min_dist_new_point" value="0.03"/>
+                <param name="min_dist_new_point" value="0.05"/>
                 <param name="compute_prob_dynamic" value="true"/>
                 <param name="prior_dynamic" value="0.2" />
                 <param name="threshold_dynamic" value="0.5" />
@@ -94,5 +94,5 @@
 
         <node pkg="rviz" type="rviz" name="rviz" args="-d $(find publi_deskewing_uncertainty)/cfg/cube.rviz"/>
 
-        <node pkg="rosbag" type="play" name="play" args="--clock -d 2 -r 0.08 $(arg bagfile)"/>
+        <node pkg="rosbag" type="play" name="play" args="--clock -d 2 -r 0.03 $(arg bagfile)"/>
 </launch>
