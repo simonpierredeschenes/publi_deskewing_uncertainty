@@ -1,0 +1,32 @@
+<launch>
+
+    <arg name="project" default="lio_sam"/>
+
+    <node pkg="tf" type="static_transform_publisher" name="lidar_tf_pub" args="0 0.08745 0.0398 -1.57079632679 0 0 mti30 rslidar16 100" />
+
+    <node pkg="rslidar_pointcloud_stamped" type="cloud_node_stamped" name="cloud_node_stamped" output="screen">
+        <remap from="rslidar_packets" to="/rslidar16_packets"/>
+        <remap from="rslidar_packets_difop" to="/rslidar16_packets_difop"/>
+        <param name="output_points_topic" value="/rslidar16_points" />
+        <param name="model" value="RS16"/>
+        <param name="max_distance" value="200"/>
+        <param name="min_distance" value="0.2"/>
+        <param name="resolution_type" value="0.5cm"/>
+        <param name="intensity_mode" value="1"/>
+        <param name="curves_path" value="$(find rslidar_pointcloud)/data/configuration_files_rig/curves.csv" />
+        <param name="angle_path" value="$(find rslidar_pointcloud)/data/configuration_files_rig/angle.csv" />
+        <param name="channel_path" value="$(find rslidar_pointcloud)/data/configuration_files_rig/ChannelNum.csv" />
+    </node>
+
+    <node pkg="lio_sam_adapter" type="lidar_adapter_node" name="lidar_adapter_node" output="screen">
+        <remap from="cloud_in" to="rslidar16_points"/>
+        <remap from="cloud_out" to="rslidar16_points_transformed"/>
+        <param name="imu_frame" value="mti30"/>
+    </node>
+
+    <!-- Parameters -->
+    <rosparam file="$(find publi_deskewing_uncertainty)/params/lio_sam_config.yaml" command="load" />
+
+    <!--- LOAM -->
+    <include file="$(find lio_sam)/launch/include/module_loam.launch" />
+</launch>
