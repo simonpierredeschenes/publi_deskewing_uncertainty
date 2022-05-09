@@ -1,0 +1,4 @@
+- SurfaceNormalDataPointsFilter:
+      knn: 20
+      epsilon: 1
+
