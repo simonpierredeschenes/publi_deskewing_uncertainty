@@ -2,6 +2,8 @@
 
     <arg name="project" default="lio_sam"/>
 
+    <param name="/use_sim_time" value="true"/>
+
     <node pkg="tf" type="static_transform_publisher" name="lidar_tf_pub" args="0 0.08745 0.0398 -1.57079632679 0 0 mti30 rslidar16 100" />
 
     <node pkg="rslidar_pointcloud_stamped" type="cloud_node_stamped" name="cloud_node_stamped" output="screen">
@@ -24,9 +26,11 @@
         <param name="imu_frame" value="mti30"/>
     </node>
 
-    <!-- Parameters -->
     <rosparam file="$(find publi_deskewing_uncertainty)/params/lio_sam_config.yaml" command="load" />
 
-    <!--- LOAM -->
     <include file="$(find lio_sam)/launch/include/module_loam.launch" />
+
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find publi_deskewing_uncertainty)/cfg/cube.rviz"/>
+
+    <node pkg="rosbag" type="play" name="play" args="--clock -d 2 -r 0.03 $(arg bagfile)"/>
 </launch>
