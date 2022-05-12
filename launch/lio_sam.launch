@@ -1,9 +1,10 @@
 <launch>
 
-    <arg name="project" default="lio_sam"/>
+    <arg name="final_transformation_file_name" default="final_transformation.txt"/>
 
     <param name="/use_sim_time" value="true"/>
 
+    <node pkg="tf" type="static_transform_publisher" name="imu_tf_pub" args="0.02255 0.054 0.0435 -1.57079632679 0 0 base_link mti30 100" />
     <node pkg="tf" type="static_transform_publisher" name="lidar_tf_pub" args="0 0.08745 0.0398 -1.57079632679 0 0 mti30 rslidar16 100" />
 
     <node pkg="rslidar_pointcloud_stamped" type="cloud_node_stamped" name="cloud_node_stamped" output="screen">
@@ -20,6 +21,10 @@
         <param name="channel_path" value="$(find rslidar_pointcloud)/data/configuration_files_rig/ChannelNum.csv" />
     </node>
 
+    <node pkg="lio_sam_transformation_exporter" type="lio_sam_transformation_exporter_node" name="lio_sam_transformation_exporter_node" output="screen">
+        <param name="final_transformation_file_name" value="$(arg final_transformation_file_name)"/>
+    </node>
+
     <node pkg="lio_sam_adapter" type="lidar_adapter_node" name="lidar_adapter_node" output="screen">
         <remap from="cloud_in" to="rslidar16_points"/>
         <remap from="cloud_out" to="rslidar16_points_transformed"/>
@@ -27,10 +32,12 @@
     </node>
 
     <rosparam file="$(find publi_deskewing_uncertainty)/params/lio_sam_config.yaml" command="load" />
+    <node pkg="lio_sam" type="lio_sam_imuPreintegration" name="lio_sam_imuPreintegration" output="screen"/>
+    <node pkg="lio_sam" type="lio_sam_imageProjection" name="lio_sam_imageProjection" output="screen"/>
+    <node pkg="lio_sam" type="lio_sam_featureExtraction" name="lio_sam_featureExtraction" output="screen"/>
+    <node pkg="lio_sam" type="lio_sam_mapOptmization" name="lio_sam_mapOptmization" output="screen"/>
 
-    <include file="$(find lio_sam)/launch/include/module_loam.launch" />
-
-    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find publi_deskewing_uncertainty)/cfg/cube.rviz"/>
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find publi_deskewing_uncertainty)/cfg/lio_sam.rviz"/>
 
     <node pkg="rosbag" type="play" name="play" args="--clock -d 2 -r 0.03 $(arg bagfile)"/>
 </launch>
