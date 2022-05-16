@@ -2,13 +2,13 @@
 
 if [ $# -ne 3 ]
 then
-  echo "Incorrect number of arguments! Argument 1 is the folder containing the bag files. Argument 2 is the folder in which to store the results. Argument 3 is the scale factor."
+  echo "Incorrect number of arguments! Argument 1 is the folder containing the bag files. Argument 2 is the folder in which to store the results. Argument 3 is the angular speed noise standard deviation."
   exit
 fi
 
 data_folder=$1
 results_folder=$2
-scale_factor=$3
+noise_std=$3
 
 if [ ! -d $results_folder ]
 then
@@ -19,7 +19,7 @@ matrix_file="$results_folder"/mapper.txt
 
 for run_bag in `ls -v "$data_folder"/run*.bag`
 do
-  roslaunch publi_deskewing_uncertainty cube.launch bagfile:=$run_bag final_transformation_file_name:=$matrix_file use_icra_model:=true scale_factor:=$scale_factor &
+  roslaunch publi_deskewing_uncertainty cube.launch bagfile:=$run_bag final_transformation_file_name:=$matrix_file use_icra_model:=true angular_speed_noise_std:=$noise_std &
   sleep 3
   while [[ ! -z `pgrep mapper_node` ]]
   do

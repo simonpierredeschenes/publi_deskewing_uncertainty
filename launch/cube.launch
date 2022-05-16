@@ -9,6 +9,9 @@
         <arg name="final_transformation_file_name" default="final_transformation.txt"/>
         <arg name="record_inertia" default="false"/>
         <arg name="inertia_file_name" default="inertia.csv"/>
+	<arg name="angular_speed_noise_std" default="0.0"/>
+	<arg name="max_linear_acceleration" default="1000.0"/>
+	<arg name="max_angular_speed" default="1000.0"/>
 
         <arg name="use_icra_model" default="false"/>
         <arg name="scale_factor" default="1.0"/>
@@ -47,8 +50,25 @@
                 <param name="fixed_frame_for_laser" value="odom"/>
         </node>
 
+	<node pkg="imu_noise_booster" type="imu_noise_booster_node" name="imu_noise_booster_node" output="screen">
+		<remap from="imu_in" to="/MTI30_imu/data"/>
+		<remap from="imu_out" to="/MTI30_imu/data_raw_with_noise"/>
+		<param name="angular_speed_noise_std" value="$(arg angular_speed_noise_std)"/>
+		<param name="max_linear_acceleration" value="$(arg max_linear_acceleration)"/>
+		<param name="max_angular_speed" value="$(arg max_angular_speed)"/>
+	</node>
+
+	<node name="imu_filter_node_magwick" pkg="imu_filter_madgwick" type="imu_filter_node" output="screen" >
+		<remap from="imu/data_raw" to="/MTI30_imu/data_raw_with_noise" />
+		<remap from="imu/data" to="/MTI30_imu/data_with_noise" />
+		<param name="gain" value="0.01"/>
+		<param name="use_mag" value="false"/>
+		<param name="fixed_frame" value="odom" />
+		<param name="publish_tf" value="false" />
+	</node>
+
         <node pkg="imu_odom" type="imu_odom_node" name="imu_odom_node" output="screen">
-                <remap from="imu_topic" to="/MTI30_imu/data"/>
+                <remap from="imu_topic" to="/MTI30_imu/data_with_noise"/>
                 <param name="odom_frame" value="odom"/>
                 <param name="robot_frame" value="base_link"/>
                 <param name="imu_frame" value="mti30"/>
@@ -92,6 +112,7 @@
                 <param name="record_inertia" value="$(arg record_inertia)"/>
                 <param name="inertia_file_name" value="$(arg inertia_file_name)"/>
                 <param name="scale_factor" value="$(arg scale_factor)"/>
+		<param name="angular_speed_noise_std" value="$(arg angular_speed_noise_std)"/>
         </node>
 
         <!-- node pkg="rviz" type="rviz" name="rviz" args="-d $(find publi_deskewing_uncertainty)/cfg/cube.rviz"/ -->
