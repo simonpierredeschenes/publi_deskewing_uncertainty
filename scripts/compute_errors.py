@@ -51,7 +51,8 @@ def rotation_matrix_to_rpy(R) :
     return (roll, pitch, yaw)
 
 def rotation_matrix_to_axis_angle(R):
-    angle = abs(math.acos((R.trace() - 1.0) / 2.0))
+    acos_argument = min(1, max(0, (R.trace() - 1.0) / 2.0))
+    angle = abs(math.acos(acos_argument))
     singular = angle < 1e-6 or abs(angle - math.pi) < 1e-6
     if not singular:
         axis = np.array([R[2,1]-R[1,2],R[0,2]-R[2,0],R[1,0]-R[0,1]]) / (2 * math.sin(angle))

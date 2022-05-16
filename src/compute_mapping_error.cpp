@@ -9,7 +9,7 @@ int main(int argc, char** argv)
 {
 	if(argc < 4 || argc > 7)
 	{
-		throw std::runtime_error("Incorrect number of arguments. Argument 1 is the path to the map to evaluate. Argument 2 is the path to the ground truth map. Argument 3 is the ball radius for the nearest neighbor search. Argument 4 (default=0) is the prior yaw angle. Argument 5 (default=0) is the prior x translation. Argument 6 (default=0) is the prior y translation.");
+		throw std::runtime_error("Incorrect number of arguments. Argument 1 is the path to the map to evaluate. Argument 2 is the path to the ground truth map. Argument 3 is the ball radius for the nearest neighbor search. Argument 4 (default=0) is the prior yaw angle in degrees. Argument 5 (default=0) is the prior x translation. Argument 6 (default=0) is the prior y translation.");
 	}
 	PM::DataPoints map(PM::DataPoints::load(argv[1]));
 	PM::DataPoints groundTruth(PM::DataPoints::load(argv[2]));
@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 	float priorY = 0;
 	if(argc > 4)
 	{
-		priorYaw = std::stof(argv[4]);
+		priorYaw = std::stof(argv[4]) * M_PI / 180.f;
 	}
 	if(argc > 5)
 	{
