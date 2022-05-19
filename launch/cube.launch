@@ -113,6 +113,7 @@
                 <param name="inertia_file_name" value="$(arg inertia_file_name)"/>
                 <param name="scale_factor" value="$(arg scale_factor)"/>
 		<param name="angular_speed_noise_std" value="$(arg angular_speed_noise_std)"/>
+		<param name="max_angular_speed" value="$(arg max_angular_speed)"/>
         </node>
 
         <!-- node pkg="rviz" type="rviz" name="rviz" args="-d $(find publi_deskewing_uncertainty)/cfg/cube.rviz"/ -->
