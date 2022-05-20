@@ -72,8 +72,7 @@ if __name__ == "__main__":
     theodolite_matrices = read_theodolite_file(sys.argv[2])
     
     if len(mapper_matrices) != len(theodolite_matrices):
-        raise RuntimeError("The number of matrices in the mapper file (" + str(len(mapper_matrices)) + ") and theodolite file (" + str(len(theodolite_matrices)) + ") does not match.")
-        exit(1)
+        print("\033[1;33mWarning: The number of matrices in the mapper file (" + str(len(mapper_matrices)) + ") and theodolite file (" + str(len(theodolite_matrices)) + ") does not match.\033[0m")
     
     with open(sys.argv[3], "w") as output_file:
         output_file.write("run_nb,x_travelled,x_error,y_travelled,y_error,z_travelled,z_error,translation,translation_error,roll_travelled,roll_error,pitch_travelled,pitch_error,yaw_travelled,yaw_error,rotation,rotation_error\n")
