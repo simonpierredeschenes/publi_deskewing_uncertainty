@@ -19,18 +19,17 @@ matrix_file="$results_folder"/mapper.txt
 
 for run_bag in `ls -v "$data_folder"/run*.bag`
 do
-  roslaunch publi_deskewing_uncertainty cube.launch bagfile:=$run_bag final_transformation_file_name:=$matrix_file use_icra_model:=true scale_factor:=$scale_factor &
+  roslaunch publi_deskewing_uncertainty cube_launch.xml bagfile:=$run_bag final_transformation_file_name:=$matrix_file use_icra_model:=true scale_factor:=$scale_factor &
   sleep 3
   while [[ ! -z `pgrep mapper_node` ]]
   do
       sleep 1
   done
-  killall rviz
+  killall rviz2
   killall imu_odom_node
   killall pointcloud2_deskew_node
   killall cloud_node_stamped
   killall static_transform_publisher
-  killall rosmaster
 done
 
 exit 0

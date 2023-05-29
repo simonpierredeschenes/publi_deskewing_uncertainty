@@ -18,7 +18,7 @@ matrix_file="$results_folder"/mapper.txt
 
 for run_bag in `ls -v "$data_folder"/run*.bag`
 do
-  roslaunch publi_deskewing_uncertainty lio_sam.launch bagfile:=$run_bag final_transformation_file_name:=$matrix_file &
+  roslaunch publi_deskewing_uncertainty lio_sam_launch.xml bagfile:=$run_bag final_transformation_file_name:=$matrix_file &
 
   sleep 3
   while [[ ! -z `pgrep play` ]]
@@ -28,15 +28,14 @@ do
   sleep 10
 
 
-  killall rviz
+  killall rviz2
   killall lio_sam_featureExtraction
   killall lio_sam_imageProjection
   killall lio_sam_imuPreintegration
   killall lio_sam_mapOptmization
   killall lidar_adapter_node
-  rosnode kill /lio_sam_transformation_exporter_node
+  killall lio_sam_transformation_exporter_node
   killall cloud_node_stamped
   killall static_transform_publisher
-  killall rosmaster
 done
 

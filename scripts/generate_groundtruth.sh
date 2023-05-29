@@ -1,6 +1,6 @@
 #! /bin/bash
 
-> /home/norlab/Desktop/doctorat/icra2023/data/2022-05-05_MatingCallDay/theodolite.txt
+> /home/sp/Desktop/doctorat/icra2023/data/2022-05-05_MatingCallDay/theodolite.txt
 
 yaw=(0 20 19 19 19 # 5
      19 17 17 17 17 # 10
@@ -43,23 +43,22 @@ y=(-1.5 -2.5 -2.5 -2.5 -2.5 # 5
 
 for i in ${!yaw[@]}
 do
-  if [ ! -d /home/norlab/Desktop/doctorat/icra2023/data/2022-05-05_MatingCallDay/scans_$((i + 1)) ]
+  if [ ! -d /home/sp/Desktop/doctorat/icra2023/data/2022-05-05_MatingCallDay/scans_$((i + 1)) ]
   then
-    mkdir -p /home/norlab/Desktop/doctorat/icra2023/data/2022-05-05_MatingCallDay/scans_$((i + 1))
+    mkdir -p /home/sp/Desktop/doctorat/icra2023/data/2022-05-05_MatingCallDay/scans_$((i + 1))
   fi
 
-  roslaunch publi_deskewing_uncertainty cube_groundtruth.launch bagfile:=/home/norlab/Desktop/doctorat/icra2023/data/2022-05-05_MatingCallDay/run_$((i + 1)).bag final_transformation_file_name:=/home/norlab/Desktop/doctorat/icra2023/data/2022-05-05_MatingCallDay/theodolite.txt initial_yaw:=${yaw[$i]} initial_x:=${x[$i]} initial_y:=${y[$i]} scan_directory:=/home/norlab/Desktop/doctorat/icra2023/data/2022-05-05_MatingCallDay/scans_$((i + 1)) &
+  roslaunch publi_deskewing_uncertainty cube_groundtruth_launch.xml bagfile:=/home/sp/Desktop/doctorat/icra2023/data/2022-05-05_MatingCallDay/run_$((i + 1)).bag final_transformation_file_name:=/home/sp/Desktop/doctorat/icra2023/data/2022-05-05_MatingCallDay/theodolite.txt initial_yaw:=${yaw[$i]} initial_x:=${x[$i]} initial_y:=${y[$i]} scan_directory:=/home/sp/Desktop/doctorat/icra2023/data/2022-05-05_MatingCallDay/scans_$((i + 1)) &
 
   sleep 3
   while [[ ! -z `pgrep mapper_node` ]]
   do
       sleep 1
   done
-  killall rviz
+  killall rviz2
   killall imu_odom_node
   killall pointcloud2_deskew_node
   killall cloud_node_stamped
   killall static_transform_publisher
-  killall rosmaster
 done
 
