@@ -17,19 +17,28 @@ fi
 matrix_file="$results_folder"/mapper.txt
 > $matrix_file
 
-for run_bag in `ls -v "$data_folder"/run*.bag`
+for file in `ls -v "$data_folder"`
 do
-  roslaunch publi_deskewing_uncertainty cube_launch.xml bagfile:=$run_bag final_transformation_file_name:=$matrix_file use_icra_model:=true scale_factor:=$scale_factor &
-  sleep 3
-  while [[ ! -z `pgrep mapper_node` ]]
-  do
-      sleep 1
-  done
-  killall rviz2
-  killall imu_odom_node
-  killall pointcloud2_deskew_node
-  killall cloud_node_stamped
-  killall static_transform_publisher
+  if [[ -f "$data_folder/$file/metadata.yaml" && $file = run* ]]
+  then
+    run_bag="$data_folder/$file"
+    ros2 launch publi_deskewing_uncertainty cube_launch.xml bagfile:=$run_bag final_transformation_file_name:=$matrix_file use_icra_model:=true scale_factor:=$scale_factor &
+    sleep 5
+
+    ros2 node list > /dev/null # force node discovery
+    while [[ `ros2 node info /rosbag2_player 2>&1` != "Unable to find node '/rosbag2_player'" ]]
+    do
+        sleep 1
+    done
+
+    killall rviz2
+    killall mapper_node
+    killall imu_odom_node
+    killall imu_filter_madgwick_node
+    killall pointcloud2_deskew_node
+    killall cloud_node_stamped
+    killall static_transform_publisher
+  fi
 done
 
 exit 0
