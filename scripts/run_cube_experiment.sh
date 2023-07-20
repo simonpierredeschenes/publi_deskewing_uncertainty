@@ -25,7 +25,7 @@ do
     run_bag="$data_folder/$file"
     ros2 run imu_saturation imu_publisher_node --ros-args -r imu_in:=/MTI30_imu/data -r imu_out:=/MTI30_imu/data_interpolated -p imu_measurements_file_name:="$run_bag.csv" -p saturation_point:=5.0 &
     ros2 run utility_nodes waiting_node --ros-args -r topic_in:=imu_publisher_status
-    ros2 launch publi_deskewing_uncertainty cube_launch.xml bagfile:=$run_bag final_transformation_file_name:=$matrix_file use_icra_model:=false scale_factor:=$scale_factor use_interpolated_measurements:=false saturation_point:=5.0 &
+    ros2 launch publi_deskewing_uncertainty cube_launch.xml bagfile:=$run_bag final_transformation_file_name:=$matrix_file use_icra_model:=false scale_factor:=$scale_factor use_interpolated_measurements:=true saturation_point:=5.0 &
     sleep 10
 
     ros2 node list > /dev/null # force node discovery

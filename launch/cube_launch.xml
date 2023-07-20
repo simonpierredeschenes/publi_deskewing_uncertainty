@@ -28,8 +28,9 @@
 
         <set_parameter name="use_sim_time" value="true"/>
 
-	<node pkg="tf2_ros" exec="static_transform_publisher" name="imu_tf_pub" args="--x 0.02255 --y 0.054 --z 0.0435 --yaw -1.57079632679 --pitch 0 --roll 0 --frame-id base_link --child-frame-id mti30"/>
-	<node pkg="tf2_ros" exec="static_transform_publisher" name="lidar_tf_pub" args="--x 0 --y 0.08745 --z 0.0398 --yaw -1.57079632679 --pitch 0 --roll 0 --frame-id mti30 --child-frame-id rslidar16"/>
+	<node pkg="tf2_ros" exec="static_transform_publisher" name="xsens_tf_pub" args="--x 0 --y 0 --z 0 --yaw 0 --pitch 0 --roll 0 --frame-id base_link --child-frame-id mti30"/>
+	<node pkg="tf2_ros" exec="static_transform_publisher" name="vectornav_tf_pub" args="--x 0.05686 --y 0 --z 0 --yaw 1.57079632679 --pitch 0 --roll 0 --frame-id mti30 --child-frame-id vn100"/>
+	<node pkg="tf2_ros" exec="static_transform_publisher" name="lidar_tf_pub" args="--x 0.02014 --y 0.08745 --z 0.0398 --yaw -1.57079632679 --pitch 0 --roll 0 --frame-id mti30 --child-frame-id rslidar16"/>
 
 	<node pkg="rslidar_pointcloud_stamped" exec="cloud_node_stamped" name="cloud_node_stamped" output="screen">
                 <remap from="rslidar_packets" to="/rslidar16_packets"/>
