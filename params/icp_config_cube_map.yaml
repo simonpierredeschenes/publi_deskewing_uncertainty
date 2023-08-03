@@ -1,13 +1,15 @@
 matcher:
   KDTreeMatcher:
-    knn: 8
-    maxDist: 1
+    knn: 15
+    maxDist: 2.0
     epsilon: 1
 
 outlierFilters:
- - VarTrimmedDistOutlierFilter:
-    minRatio: 0.5
-    maxRatio: 0.7
+  #- VarTrimmedDistOutlierFilter:
+  #  minRatio: 0.5
+  #  maxRatio: 0.7
+  - TrimmedDistOutlierFilter:
+      ratio: 0.7
 
 errorMinimizer:
   PointToPlaneErrorMinimizer:

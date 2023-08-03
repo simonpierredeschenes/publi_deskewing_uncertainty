@@ -1,5 +1,5 @@
 <launch>
-        <arg name="real_time" default="false"/>
+        <arg name="real_time" default="true"/>
         <arg name="residual" default="false"/>
         <arg name="residual_file_name" default=""/>
         <arg name="initial_yaw" default="0"/>
@@ -16,17 +16,18 @@
 	<arg name="scale_factor" default="1.0"/>
 	<arg name="bagfile" default=""/>
 
-        <set_parameter name="/use_sim_time" value="true"/>
+        <set_parameter name="use_sim_time" value="true"/>
 
-        <node pkg="tf2_ros" exec="static_transform_publisher" name="imu_tf_pub" args="0.02255 0.054 0.0435 -1.57079632679 0 0 base_link mti30 100" />
-        <node pkg="tf2_ros" exec="static_transform_publisher" name="lidar_tf_pub" args="0 0.08745 0.0398 -1.57079632679 0 0 mti30 rslidar16 100" />
-
+        <node pkg="tf2_ros" exec="static_transform_publisher" name="imu_tf_pub" args="--x 0.02255 --y 0.054 --z 0.0435 --yaw -1.57079632679 --pitch 0 --roll 0 --frame-id base_link --child-frame-id mti30" />
+        <node pkg="tf2_ros" exec="static_transform_publisher" name="lidar_tf_pub" args="--x 0 --y 0.08745 --z 0.0398 --yaw -1.57079632679 --pitch 0 --roll 0 --frame-id mti30 --child-frame-id rslidar16" />
+	<node pkg="tf2_ros" exec="static_transform_publisher" name="vectornav_tf_pub" args="--x 0.05686 --y 0 --z 0 --yaw 1.57079632679 --pitch 0 --roll 0 --frame-id mti30 --child-frame-id vn100"/>
+	
 	<node pkg="rslidar_pointcloud_stamped" exec="cloud_node_stamped" name="cloud_node_stamped" output="screen">
                 <remap from="rslidar_packets" to="/rslidar16_packets"/>
                 <remap from="rslidar_packets_difop" to="/rslidar16_packets_difop"/>
                 <param name="output_points_topic" value="rslidar_points" />
                 <param name="model" value="RS16"/>
-                <param name="max_distance" value="200"/>
+                <param name="max_distance" value="200.0"/>
                 <param name="min_distance" value="0.2"/>
                 <param name="resolution_type" value="0.5cm"/>
                 <param name="intensity_mode" value="1"/>
@@ -42,10 +43,10 @@
         </node>
 
         <node pkg="imu_odom" exec="imu_odom_node" name="imu_odom_node" output="screen">
-                <remap from="imu_topic" to="/MTI30_imu/data"/>
+		<remap from="imu_topic" to="/vectornav_imu/data"/>
                 <param name="odom_frame" value="odom"/>
                 <param name="robot_frame" value="base_link"/>
-                <param name="imu_frame" value="mti30"/>
+                <param name="imu_frame" value="vn100"/>
                 <param name="real_time" value="$(var real_time)"/>
         </node>
 
@@ -58,8 +59,8 @@
                 <param name="input_filters_config" value="$(find-pkg-share publi_deskewing_uncertainty)/params/input_filters_cube_map.yaml"/>
                 <param name="map_post_filters_config" value="$(find-pkg-share publi_deskewing_uncertainty)/params/post_filters_cube_model.yaml"/>
                 <param name="map_update_condition" value="delay"/>
-                <param name="map_update_delay" value="0"/>
-                <param name="sensor_max_range" value="100.0"/>
+                <param name="map_update_delay" value="0.0"/>
+                <param name="sensor_max_range" value="50.0"/>
                 <param name="min_dist_new_point" value="0.05"/>
                 <param name="compute_prob_dynamic" value="true"/>
                 <param name="prior_dynamic" value="0.2" />
@@ -71,9 +72,9 @@
                 <param name="beta" value="0.9" />
                 <param name="is_3D" value="true" />
                 <param name="compute_prob_dynamic" value="true" />
-                <param name="map_tf_publish_rate" value="100" />
+                <param name="map_tf_publish_rate" value="100.0" />
                 <param name="is_online" value="$(var real_time)"/>
-                <param name="max_idle_time" value="30"/>
+                <param name="max_idle_time" value="30.0"/>
 
                 <param name="final_transformation_file_name" value="$(var final_transformation_file_name)"/>
                 <param name="use_icra_model" value="$(var use_icra_model)"/>
@@ -82,7 +83,6 @@
                 <param name="final_map_file_name" value="$(var final_map_file_name)"/>
                 <param name="final_map_pose_file_name" value="$(var final_map_pose_file_name)"/>
                 <param name="mean_residual_file_name" value="$(var residual_file_name)"/>
-                <!-- param name="initial_map_pose" value="$(eval [[cos(radians(arg('initial_yaw'))),-sin(radians(arg('initial_yaw'))),0,arg('initial_x')],[sin(radians(arg('initial_yaw'))),cos(radians(arg('initial_yaw'))),0,arg('initial_y')],[0,0,1,0],[0,0,0,1]])" if="$(eval arg('initial_map_pose') == '')"/ -->
                 <param name="record_inertia" value="$(var record_inertia)"/>
                 <param name="inertia_file_name" value="$(var inertia_file_name)"/>
                 <param name="scale_factor" value="$(var scale_factor)"/>
@@ -90,5 +90,5 @@
 
         <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share publi_deskewing_uncertainty)/cfg/cube.rviz"/>
 
-	<executable cmd="ros2 bag play $(var bagfile) -d 2 -r 0.03 --clock"/>
+	<executable cmd="ros2 bag play $(var bagfile) -d 2 -r 0.1 --clock"/>
 </launch>
