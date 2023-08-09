@@ -10,10 +10,10 @@
 
 # operator bounding box
 - BoundingBoxDataPointsFilter:
-      xMin: -0.75
-      xMax: 0.75
-      yMin: -1.0
-      yMax: 0.0
+      xMin: -1.5
+      xMax: 1.5
+      yMin: -1.5
+      yMax: 1.5
       zMin: -1.5
       zMax: 1.5
       removeInside: 1

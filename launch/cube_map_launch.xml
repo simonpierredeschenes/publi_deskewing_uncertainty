@@ -69,7 +69,7 @@
                 <param name="map_post_filters_config" value="$(find-pkg-share publi_deskewing_uncertainty)/params/post_filters_cube_model.yaml"/>
                 <param name="map_update_condition" value="delay"/>
                 <param name="map_update_delay" value="0.0"/>
-                <param name="sensor_max_range" value="50.0"/>
+                <param name="sensor_max_range" value="100.0"/>
                 <param name="min_dist_new_point" value="0.05"/>
                 <param name="compute_prob_dynamic" value="true"/>
                 <param name="prior_dynamic" value="0.2" />
