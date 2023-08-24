@@ -1,5 +1,5 @@
 <launch>
-        <arg name="real_time" default="true"/>
+        <arg name="real_time" default="false"/>
         <arg name="mapping" default="true"/>
         <arg name="residual" default="false"/>
         <arg name="residual_file_name" default=""/>
@@ -10,10 +10,9 @@
         <arg name="record_inertia" default="false"/>
 	<arg name="inertia_file_name" default="inertia.csv"/>
 
-        <arg name="use_icra_model" default="false"/>
+        <arg name="use_icra_model" default="true"/>
 	<arg name="scale_factor" default="1.0"/>
 	<arg name="use_interpolated_measurements" default="true"/>
-	<arg name="saturation_point" default="12.0"/>
 
         <arg name="initial_map_file_name" default="" if="$(var mapping)"/>
         <arg name="initial_map_file_name" default="/hdd/publi_deskewing_uncertainty/2020-11-18_metrology/metrology_lab.vtk" unless="$(var mapping)"/>
@@ -24,7 +23,7 @@
         <arg name="post_filters_config" default="$(find-pkg-share publi_deskewing_uncertainty)/params/post_filters_cube_model.yaml" if="$(var use_icra_model)"/>
 	<arg name="post_filters_config" default="$(find-pkg-share publi_deskewing_uncertainty)/params/post_filters_cube_no_model.yaml" unless="$(var use_icra_model)"/>
 	<arg name="imu_topic" default="/MTI30_imu/data_interpolated" if="$(var use_interpolated_measurements)"/>
-	<arg name="imu_topic" default="/MTI30_imu/data_saturated" unless="$(var use_interpolated_measurements)"/>
+	<arg name="imu_topic" default="/MTI30_imu/data" unless="$(var use_interpolated_measurements)"/>
 
         <set_parameter name="use_sim_time" value="true"/>
 
@@ -50,12 +49,6 @@
                 <remap from="input_point_cloud" to="/rslidar_points"/>
                 <remap from="output_point_cloud" to="/rslidar_points_deskewed"/>
 		<param name="fixed_frame_for_laser" value="odom"/>
-	</node>
-
-	<node pkg="imu_saturation" exec="virtual_saturation_node" name="virtual_saturation_node" output="screen">
-		<remap from="imu_in" to="/MTI30_imu/data"/>
-		<remap from="imu_out" to="/MTI30_imu/data_saturated"/>
-		<param name="saturation_point" value="$(var saturation_point)"/>
 	</node>
 
 	<node pkg="imu_filter_madgwick" exec="imu_filter_madgwick_node" name="imu_filter_node_magwick"  output="screen" >
