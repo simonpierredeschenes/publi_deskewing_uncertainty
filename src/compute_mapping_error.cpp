@@ -69,7 +69,9 @@ int main(int argc, char** argv)
     matcher->init(groundTruth);
     PM::Matches matches = matcher->findClosests(map);
     PM::Matrix errors = matches.dists.array().sqrt();
+    PM::Matrix belongingToMap = (errors.array() <= threshold).cast<float>();
     map.addDescriptor("error", errors);
+    map.addDescriptor("belonging_to_map", belongingToMap);
     std::string registeredMapFileName = fileName + "_with_error" + fileExtension;
     map.save(registeredMapFileName);
 
