@@ -9,7 +9,8 @@ outlierFilters:
     minRatio: 0.5
     maxRatio: 0.7
 
-# the error mininizer is declared in the code
+errorMinimizer:
+  PointToPlaneErrorMinimizer:
 
 transformationCheckers:
   - DifferentialTransformationChecker:

@@ -1,15 +1,14 @@
 #! /bin/bash
 
-if [ $# -ne 4 ]
+if [ $# -ne 3 ]
 then
-  echo "Incorrect number of arguments! Argument 1 is the folder containing the bag files. Argument 2 is the folder in which to store the results. Argument 3 is a boolean indicating whether or not to use interpolated measurements. Argument 4 is a boolean indicating whether or not to use deskewing uncertainty during registration."
+  echo "Incorrect number of arguments! Argument 1 is the folder containing the bag files. Argument 2 is the folder in which to store the results. Argument 3 is a boolean indicating whether or not to use interpolated measurements."
   exit
 fi
 
 data_folder=$1
 results_folder=$2
 use_interpolated_measurements=$3
-use_icra_model=$4
 
 if [ ! -d $results_folder ]
 then
@@ -28,10 +27,10 @@ do
     if [ $use_interpolated_measurements = "true" ]
     then
       ros2 run imu_saturation imu_publisher_node --ros-args -r imu_in:=/MTI30_imu/data -r imu_out:=/MTI30_imu/data_interpolated -p imu_measurements_file_name:="$run_bag"_xsens.csv -p saturation_point:=10.5 &
-      ros2 run utility_nodes waiting_node --ros-args -r topic_in:=imu_publisher_status
-      ros2 launch publi_deskewing_uncertainty cube_launch.xml bagfile:=$run_bag final_transformation_file_name:=$matrix_file use_icra_model:=$use_icra_model use_interpolated_measurements:=true saturation_point:=10.5 final_map_file_name:="$results_folder"/map_"$run_nb".vtk final_trajectory_file_name:="$results_folder"/trajectory_"$run_nb".vtk &
+      #ros2 run utility_nodes waiting_node --ros-args -r topic_in:=imu_publisher_status
+      ros2 launch publi_deskewing_uncertainty cube_launch.xml bagfile:=$run_bag final_transformation_file_name:=$matrix_file use_interpolated_measurements:=true imu_measurements_file_name:="$results_folder"/speeds_imu_"$run_nb".csv icp_measurements_file_name:="$results_folder"/speeds_icp_"$run_nb".csv final_map_file_name:="$results_folder"/map_"$run_nb".vtk final_trajectory_file_name:="$results_folder"/trajectory_"$run_nb".vtk &
     else
-      ros2 launch publi_deskewing_uncertainty cube_launch.xml bagfile:=$run_bag final_transformation_file_name:=$matrix_file use_icra_model:=$use_icra_model use_interpolated_measurements:=false saturation_point:=10.5 final_map_file_name:="$results_folder"/map_"$run_nb".vtk final_trajectory_file_name:="$results_folder"/trajectory_"$run_nb".vtk &
+      ros2 launch publi_deskewing_uncertainty cube_launch.xml bagfile:=$run_bag final_transformation_file_name:=$matrix_file use_interpolated_measurements:=false imu_measurements_file_name:="$results_folder"/speeds_imu_"$run_nb".csv icp_measurements_file_name:="$results_folder"/speeds_icp_"$run_nb".csv final_map_file_name:="$results_folder"/map_"$run_nb".vtk final_trajectory_file_name:="$results_folder"/trajectory_"$run_nb".vtk &
     fi
     sleep 10
 
@@ -42,6 +41,7 @@ do
     done
 
     killall rviz2
+    killall angular_velocity_logger_node
     killall imu_odom_node
     killall imu_filter_madgwick_node
     killall pointcloud2_deskew_node

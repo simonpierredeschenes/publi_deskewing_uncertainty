@@ -51,12 +51,12 @@ int main(int argc, char** argv)
     icpConfig.open("/home/sp/ros2_ws/src/publi_deskewing_uncertainty/params/mapping_error_icp_config.yaml");
     icp.loadFromYaml(icpConfig);
     icpConfig.close();
-    icp.transformations.apply(map, prior);
+    icp.transformations.apply(groundTruth, prior);
     size_t fileExtensionPosition = std::string(argv[1]).rfind('.');
     std::string fileName = std::string(argv[1]).substr(0, fileExtensionPosition);
     std::string fileExtension = std::string(argv[1]).substr(fileExtensionPosition);
-    std::string mapWithPriorFileName = fileName + "_prior" + fileExtension;
-    map.save(mapWithPriorFileName);
+    std::string mapWithPriorFileName = fileName + "_gt_prior" + fileExtension;
+    groundTruth.save(mapWithPriorFileName);
     PM::TransformationParameters correction = icp(map, groundTruth);
     icp.transformations.apply(map, correction);
 
