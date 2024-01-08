@@ -8,20 +8,6 @@
 	<node pkg="tf2_ros" exec="static_transform_publisher" name="vectornav_tf_pub" args="--x 0.05686 --y 0 --z 0 --yaw 1.57079632679 --pitch 0 --roll 0 --frame-id mti30 --child-frame-id vn100"/>
 	<node pkg="tf2_ros" exec="static_transform_publisher" name="lidar_tf_pub" args="--x 0.02014 --y 0.08745 --z 0.0398 --yaw -1.57079632679 --pitch 0 --roll 0 --frame-id mti30 --child-frame-id rslidar16"/>
 	
-	<node pkg="rslidar_pointcloud_stamped" exec="cloud_node_stamped" name="cloud_node_stamped" output="screen">
-		<remap from="rslidar_packets" to="/rslidar16_packets"/>
-		<remap from="rslidar_packets_difop" to="/rslidar16_packets_difop"/>
-		<param name="output_points_topic" value="rslidar_points" />
-		<param name="model" value="RS16"/>
-		<param name="max_distance" value="200.0"/>
-		<param name="min_distance" value="0.2"/>
-		<param name="resolution_type" value="0.5cm"/>
-		<param name="intensity_mode" value="1"/>
-		<param name="curves_path" value="$(find-pkg-share rslidar_pointcloud_stamped)/data/configuration_files_rig/curves.csv" />
-		<param name="angle_path" value="$(find-pkg-share rslidar_pointcloud_stamped)/data/configuration_files_rig/angle.csv" />
-		<param name="channel_path" value="$(find-pkg-share rslidar_pointcloud_stamped)/data/configuration_files_rig/ChannelNum.csv" />
-	</node>
-
 	<node pkg="pointcloud_motion_deskew" exec="pointcloud2_deskew_node" name="pointcloud2_deskew_node">
 		<remap from="input_point_cloud" to="/rslidar_points"/>
 		<remap from="output_point_cloud" to="/rslidar_points_deskewed"/>
