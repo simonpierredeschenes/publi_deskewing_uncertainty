@@ -12,7 +12,6 @@ use_interpolated_measurements=$2
 if [ $use_interpolated_measurements = "true" ]
 then
   ros2 run imu_saturation imu_publisher_node --ros-args -r imu_in:=/MTI30_imu/data -r imu_out:=/MTI30_imu/data_interpolated -p imu_measurements_file_name:="$bag_file"_xsens.csv -p saturation_point:=10.5 &
-  ros2 run utility_nodes waiting_node --ros-args -r topic_in:=imu_publisher_status
   ros2 launch publi_deskewing_uncertainty cube_launch.xml bagfile:=$bag_file use_interpolated_measurements:=true
 elif [ $use_interpolated_measurements = "false" ]
 then
