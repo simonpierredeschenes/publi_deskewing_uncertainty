@@ -10,8 +10,6 @@
     <arg name="final_transformation_file_name" default=""/>
     <arg name="record_inertia" default="false"/>
     <arg name="inertia_file_name" default="inertia.csv"/>
-    <arg name="imu_measurements_file_name" default=""/>
-    <arg name="icp_measurements_file_name" default=""/>
     <arg name="use_interpolated_measurements" default="true"/>
     <arg name="initial_map_file_name" default="" if="$(var mapping)"/>
     <arg name="initial_map_file_name" default="/hdd/publi_deskewing_uncertainty/2020-11-18_metrology/metrology_lab.vtk" unless="$(var mapping)"/>
@@ -86,11 +84,6 @@
         <param name="initial_map_pose" value="$(var initial_map_pose)" type="str"/>
         <param name="record_inertia" value="$(var record_inertia)"/>
         <param name="inertia_file_name" value="$(var inertia_file_name)"/>
-    </node>
-
-    <node pkg="angular_velocity_logger" exec="angular_velocity_logger_node" name="angular_velocity_logger_node" output="screen">
-        <param name="imu_measurements_file_name" value="$(var imu_measurements_file_name)"/>
-        <param name="icp_measurements_file_name" value="$(var icp_measurements_file_name)"/>
     </node>
 
     <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share publi_deskewing_uncertainty)/cfg/cube.rviz"/>

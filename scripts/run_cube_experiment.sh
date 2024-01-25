@@ -27,9 +27,9 @@ do
     if [ $use_interpolated_measurements = "true" ]
     then
       ros2 run imu_saturation imu_publisher_node --ros-args -r imu_in:=/MTI30_imu/data -r imu_out:=/MTI30_imu/data_interpolated -p imu_measurements_file_name:="$run_bag"_xsens.csv -p saturation_point:=10.5 &
-      ros2 launch publi_deskewing_uncertainty cube_launch.xml bagfile:=$run_bag final_transformation_file_name:=$matrix_file use_interpolated_measurements:=true imu_measurements_file_name:="$results_folder"/speeds_imu_"$run_nb".csv icp_measurements_file_name:="$results_folder"/speeds_icp_"$run_nb".csv final_map_file_name:="$results_folder"/map_"$run_nb".vtk final_trajectory_file_name:="$results_folder"/trajectory_"$run_nb".vtk &
+      ros2 launch publi_deskewing_uncertainty cube_launch.xml bagfile:=$run_bag final_transformation_file_name:=$matrix_file use_interpolated_measurements:=true final_map_file_name:="$results_folder"/map_"$run_nb".vtk final_trajectory_file_name:="$results_folder"/trajectory_"$run_nb".vtk &
     else
-      ros2 launch publi_deskewing_uncertainty cube_launch.xml bagfile:=$run_bag final_transformation_file_name:=$matrix_file use_interpolated_measurements:=false imu_measurements_file_name:="$results_folder"/speeds_imu_"$run_nb".csv icp_measurements_file_name:="$results_folder"/speeds_icp_"$run_nb".csv final_map_file_name:="$results_folder"/map_"$run_nb".vtk final_trajectory_file_name:="$results_folder"/trajectory_"$run_nb".vtk &
+      ros2 launch publi_deskewing_uncertainty cube_launch.xml bagfile:=$run_bag final_transformation_file_name:=$matrix_file use_interpolated_measurements:=false final_map_file_name:="$results_folder"/map_"$run_nb".vtk final_trajectory_file_name:="$results_folder"/trajectory_"$run_nb".vtk &
     fi
     sleep 10
 
